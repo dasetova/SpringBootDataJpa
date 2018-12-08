@@ -1,15 +1,9 @@
 package com.dasetova.springstudy.models.dao;
 
-import java.util.List;
+import org.springframework.data.repository.CrudRepository;
 
 import com.dasetova.springstudy.models.entity.Customer;
 
-public interface ICustomerDAO {
-	public List<Customer> findAll();
-	
-	public void save(Customer customer);
-	
-	public Customer findOne(Long id);
-	
-	public void delete(Long id);
+public interface ICustomerDAO extends CrudRepository<Customer, Long>{
+
 }
