@@ -1,8 +1,11 @@
 package com.dasetova.springstudy.controllers;
 
 import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseEntity;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -14,6 +17,8 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.UrlResource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Controller;
@@ -41,6 +46,25 @@ public class CustomerController {
 	private ICustomerService customerService;
 	
 	private final Logger log = LoggerFactory.getLogger(getClass());
+	
+	@GetMapping(value="/uploads/{filename:.+}")
+	public ResponseEntity<Resource> showPhoto(@PathVariable String filename){
+		Path resourcesPath = Paths.get("uploads").resolve(filename).toAbsolutePath();
+		log.info("PathPhoto: " + resourcesPath);
+		
+		Resource resource = null;
+		try {
+			resource = new UrlResource(resourcesPath.toUri());
+			if(!resource.exists() || !resource.isReadable()) {
+				throw new RuntimeException("Error: Can't charge image " + resourcesPath.toString());
+			}
+		}catch(MalformedURLException e) {
+			e.printStackTrace();
+		}
+		return ResponseEntity.ok()
+				.header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\""+ resource.getFilename()+"\"")
+				.body(resource);
+	}
 
 	@RequestMapping(value="/list", method=RequestMethod.GET)
 	public String listar(@RequestParam(name="page", defaultValue="0") int page, Model model) {
