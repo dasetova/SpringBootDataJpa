@@ -11,11 +11,14 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.SessionAttributes;
+import org.springframework.web.bind.support.SessionStatus;
 
 import com.dasetova.springstudy.models.dao.ICustomerDAO;
 import com.dasetova.springstudy.models.entity.Customer;
 
 @Controller
+@SessionAttributes("customer") // Good practice to unused the hidden id
 public class CustomerController {
 	
 	@Autowired
@@ -47,7 +50,7 @@ public class CustomerController {
 	}
 	
 	@RequestMapping(value="/form/{id}")
-	public String editCustomer(@PathVariable(value="id") Long id,Map<String, Object> model) {
+	public String editCustomer(@PathVariable(value="id") Long id,Map<String, Object> model, SessionStatus status) {
 		Customer customer = null;
 		if (id > 0) {
 			customer = customerDAO.findOne(id);
@@ -56,6 +59,15 @@ public class CustomerController {
 		}
 		model.put("title", "Customer Edit Form");
 		model.put("customer", customer);
+		status.setComplete(); //Good Practice to unused the hidden id
 		return "form";
+	}
+	
+	@RequestMapping(value="/delete/{id}")
+	public String delete(@PathVariable(value="id") Long id) {
+		if (id > 0) {
+			customerDAO.delete(id);
+		}
+		return "redirect:/list";
 	}
 }

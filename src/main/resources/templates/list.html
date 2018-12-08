@@ -38,7 +38,7 @@
 					<th>lastname</th>
 					<th>email</th>
 					<th>create_at</th>
-					<th>edit</th>
+					<th>actions</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -48,7 +48,8 @@
 					<td th:text="${customer.lastname}"></td>
 					<td th:text="${customer.email}"></td>
 					<td th:text="${customer.createAt}"></td>
-					<td><a class="btn btn-primary btn-xs" th:href="@{/form/} + ${customer.id}" th:text="'edit'"></a></td>
+					<td><a class="btn btn-primary btn-xs" th:href="@{/form/} + ${customer.id}" th:text="'edit'"></a>
+					<a class="btn btn-danger btn-xs" th:href="@{/delete/} + ${customer.id}" th:text="'delete'" onclick="return confirm('Are you sure?')"></a></td>
 				</tr>
 			</tbody>
 		</table>

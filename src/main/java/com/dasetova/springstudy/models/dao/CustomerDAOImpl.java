@@ -34,10 +34,18 @@ public class CustomerDAOImpl implements ICustomerDAO{
 		}
 	}
 
+	@Transactional(readOnly=true)
 	@Override
 	public Customer findOne(Long id) {
 		// TODO Auto-generated method stub
 		return em.find(Customer.class, id);
+	}
+
+	@Transactional
+	@Override
+	public void delete(Long id) {
+		// TODO Auto-generated method stub
+		em.remove(findOne(id));
 	}
 
 }
