@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.Files;
@@ -46,10 +47,12 @@ public class CustomerController {
 	private ICustomerService customerService;
 	
 	private final Logger log = LoggerFactory.getLogger(getClass());
+	// Podría tomar un valor de application.properties con @Value
+	private final static String UPLOADS_FOLDER = "uploads";
 	
 	@GetMapping(value="/uploads/{filename:.+}")
 	public ResponseEntity<Resource> showPhoto(@PathVariable String filename){
-		Path resourcesPath = Paths.get("uploads").resolve(filename).toAbsolutePath();
+		Path resourcesPath = Paths.get(UPLOADS_FOLDER).resolve(filename).toAbsolutePath();
 		log.info("PathPhoto: " + resourcesPath);
 		
 		Resource resource = null;
@@ -106,11 +109,13 @@ public class CustomerController {
 		}
 		
 		if (!photo.isEmpty()) {
-//			Path resourcesPath = Paths.get("src//main//resources//static//uploads");
-//			String rootPath = resourcesPath.toFile().getAbsolutePath();
-//			String rootPath = "//home//dasetova//Imágenes//SpringUploads";
+			if(customer.getId() != null && customer.getId() > 0 
+					&& customer.getPhoto() != null && customer.getPhoto().length() > 0) {
+				this.deletePhoto(customer.getPhoto());
+			}
+			
 			String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename(); 
-			Path resourcesPath = Paths.get("uploads").resolve(uniqueFilename);
+			Path resourcesPath = Paths.get(UPLOADS_FOLDER).resolve(uniqueFilename);
 			Path fullPath = resourcesPath.toAbsolutePath();
 			
 			log.info("rootPath: " + resourcesPath);
@@ -160,9 +165,24 @@ public class CustomerController {
 	@RequestMapping(value="/delete/{id}")
 	public String delete(@PathVariable(value="id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
+			Customer customer = this.customerService.findOne(id);
 			customerService.delete(id);
 			flash.addFlashAttribute("success", "Customer deleted successfully");
+			
+			if(this.deletePhoto(customer.getPhoto())) {
+				flash.addFlashAttribute("info", "Photo " + customer.getPhoto() + " deleted");
+			}
 		}
 		return "redirect:/list";
+	}
+	
+	private boolean deletePhoto(String photo) {
+		Path rootPath = Paths.get(UPLOADS_FOLDER).resolve(photo).toAbsolutePath();
+		File file = rootPath.toFile();
+		
+		if(file.exists() && file.canRead()) {
+			return file.delete();
+		}
+		return false;
 	}
 }
