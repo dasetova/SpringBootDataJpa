@@ -27,25 +27,31 @@
 			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
 			th:text="${title}"></h1>
 		<form th:action="@{/save}" th:object="${customer}" method="post">
-			<input type="hidden" th:field="*{id}" class="form-control"/>
-			<table class="table table-bordered">
+			<input type="hidden" th:field="*{id}" class="form-control" />
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">Name</label>
+				<div class="col-sm-6">
+					<input type="text" th:field="*{name}" class="form-control" />
+				</div>
 
-				<tr>
-					<td style="width:200px">Name</td>
-					<td><input type="text" th:field="*{name}" class="form-control"/></td>
-				</tr>
-				<tr>
-					<td>Last Name</td>
-					<td><input type="text" th:field="*{lastname}" class="form-control"/></td>
-				</tr>
-				<tr>
-					<td>Email</td>
-					<td><input type="email" th:field="*{email}" class="form-control"/></td>
-				</tr>
-				<tr>
-					<td><input type="submit" value="Create Customer" class="btn btn-primary"/></td>
-				</tr>
-			</table>
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">Last Name</label>
+				<div class="col-sm-6">
+					<input type="text" th:field="*{lastname}" class="form-control" />
+				</div>
+
+			</div>
+			<div class="form-group row">
+				<label class="col-sm-2 col-form-label">Email</label>
+				<div class="col-sm-6">
+					<input type="email" th:field="*{email}" class="form-control" />
+				</div>
+
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Create Customer" class="btn btn-primary" />
+			</div>
 		</form>
 	</div>
 </body>
