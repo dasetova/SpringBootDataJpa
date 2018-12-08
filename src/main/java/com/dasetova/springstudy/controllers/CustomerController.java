@@ -1,6 +1,11 @@
 package com.dasetova.springstudy.controllers;
 
 import org.springframework.data.domain.Pageable;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.Map;
 
 import javax.validation.Valid;
@@ -17,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.dasetova.springstudy.models.service.ICustomerService;
@@ -51,10 +57,26 @@ public class CustomerController {
 	}
 	
 	@RequestMapping(value="/save", method=RequestMethod.POST)
-	public String save(@Valid Customer customer, BindingResult result, Model model, RedirectAttributes flash, SessionStatus status) {
+	public String save(@Valid Customer customer, BindingResult result, Model model, @RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus status) {
 		if(result.hasErrors()) {
 			model.addAttribute("title", "Customer Form");
 			return "form";
+		}
+		
+		if (!photo.isEmpty()) {
+			Path resourcesPath = Paths.get("src//main//resources//static//uploads");
+			String rootPath = resourcesPath.toFile().getAbsolutePath();
+			try {
+				byte[] bytes = photo.getBytes();
+				Path completeRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+				Files.write(completeRoute, bytes);
+				flash.addFlashAttribute("info", "Photo upload success " + photo.getOriginalFilename());
+				
+				customer.setPhoto(photo.getOriginalFilename());
+			}catch(IOException e) {
+				e.printStackTrace();
+			}
+			
 		}
 		
 		String msg = (customer.getId() != null ? "Customer updated" : "Customer created successfully");
