@@ -8,4 +8,6 @@ public interface ICustomerDAO {
 	public List<Customer> findAll();
 	
 	public void save(Customer customer);
+	
+	public Customer findOne(Long id);
 }

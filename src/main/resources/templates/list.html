@@ -27,7 +27,8 @@
 			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
 			th:text="${title}"></h1>
 			
-		<a th:href="@{/new}">Create Customer</a>
+		
+		<p><a class="btn btn-success btn-xs" th:href="@{/form}">Create Customer</a></p>
 
 		<table class="table table-striped">
 			<thead>
@@ -37,6 +38,7 @@
 					<th>lastname</th>
 					<th>email</th>
 					<th>create_at</th>
+					<th>edit</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -46,6 +48,7 @@
 					<td th:text="${customer.lastname}"></td>
 					<td th:text="${customer.email}"></td>
 					<td th:text="${customer.createAt}"></td>
+					<td><a class="btn btn-primary btn-xs" th:href="@{/form/} + ${customer.id}" th:text="'edit'"></a></td>
 				</tr>
 			</tbody>
 		</table>
