@@ -7,9 +7,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -36,6 +39,8 @@ public class CustomerController {
 	
 	@Autowired
 	private ICustomerService customerService;
+	
+	private final Logger log = LoggerFactory.getLogger(getClass());
 
 	@RequestMapping(value="/list", method=RequestMethod.GET)
 	public String listar(@RequestParam(name="page", defaultValue="0") int page, Model model) {
@@ -79,14 +84,22 @@ public class CustomerController {
 		if (!photo.isEmpty()) {
 //			Path resourcesPath = Paths.get("src//main//resources//static//uploads");
 //			String rootPath = resourcesPath.toFile().getAbsolutePath();
-			String rootPath = "//home//dasetova//Imágenes//SpringUploads";
+//			String rootPath = "//home//dasetova//Imágenes//SpringUploads";
+			String uniqueFilename = UUID.randomUUID().toString() + "_" + photo.getOriginalFilename(); 
+			Path resourcesPath = Paths.get("uploads").resolve(uniqueFilename);
+			Path fullPath = resourcesPath.toAbsolutePath();
+			
+			log.info("rootPath: " + resourcesPath);
+			log.info("rootPath: " + fullPath);
 			try {
-				byte[] bytes = photo.getBytes();
-				Path completeRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
-				Files.write(completeRoute, bytes);
-				flash.addFlashAttribute("info", "Photo upload success " + photo.getOriginalFilename());
 				
-				customer.setPhoto(photo.getOriginalFilename());
+				Files.copy(photo.getInputStream(), fullPath);
+//				byte[] bytes = photo.getBytes();
+//				Path completeRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
+//				Files.write(completeRoute, bytes);
+				flash.addFlashAttribute("info", "Photo upload success " + uniqueFilename);
+				
+				customer.setPhoto(uniqueFilename);
 			}catch(IOException e) {
 				e.printStackTrace();
 			}
