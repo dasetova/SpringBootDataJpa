@@ -3,8 +3,7 @@
 <head th:fragment="head">
 <meta charset="UTF-8" />
 <title th:text="'SpringBoot: MVC + ThymeLeaf + JPA' + ${title}"></title>
-<link rel="stylesheet"
-	th:href="@{/css/bootstrap.min.css}" />
+<link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
 </head>
 <body>
 	<header th:fragment="header">
@@ -22,6 +21,10 @@
 				</ul>
 			</div>
 		</nav>
+		<div class="alert alert-success" th:if="${success != null}" th:text="${success}"></div>
+		<div class="alert alert-danger" th:if="${warning != null}" th:text="${error}"></div>
+		<div class="alert alert-info" th:if="${info != null}" th:text="${info}"></div>
+		<div class="alert alert-warning" th:if="${warning != null}" th:text="${warning}"></div>
 	</header>
 	<div class="container"></div>
 	<footer th:fragment="footer" class="container">
@@ -32,9 +35,9 @@
 				Boot</a> y <a href="http://www.thymeleaf.org">Thymeleaf</a>.
 		</p>
 		<p>
-			Este proyecto fue desarrollado en STS
-			Spring Tool, siguiendo curso Udemy del profesor Andrés Guzmán.<br /> &copy; dasetova 2018,
-			Inc. Todos los derechos reservados. Términos de uso y privacidad.<br />
+			Este proyecto fue desarrollado en STS Spring Tool, siguiendo curso
+			Udemy del profesor Andrés Guzmán.<br /> &copy; dasetova 2018, Inc.
+			Todos los derechos reservados. Términos de uso y privacidad.<br />
 		</p>
 		<!-- Optional JavaScript -->
 		<!-- jQuery first, then Bootstrap JS -->
