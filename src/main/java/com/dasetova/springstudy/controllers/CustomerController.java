@@ -77,8 +77,9 @@ public class CustomerController {
 		}
 		
 		if (!photo.isEmpty()) {
-			Path resourcesPath = Paths.get("src//main//resources//static//uploads");
-			String rootPath = resourcesPath.toFile().getAbsolutePath();
+//			Path resourcesPath = Paths.get("src//main//resources//static//uploads");
+//			String rootPath = resourcesPath.toFile().getAbsolutePath();
+			String rootPath = "//home//dasetova//Imágenes//SpringUploads";
 			try {
 				byte[] bytes = photo.getBytes();
 				Path completeRoute = Paths.get(rootPath + "//" + photo.getOriginalFilename());
