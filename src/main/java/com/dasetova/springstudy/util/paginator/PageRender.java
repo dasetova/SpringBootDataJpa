@@ -21,14 +21,14 @@ public class PageRender<T> {
 		this.page = page;
 		this.pages = new ArrayList<PageItem>();
 		
-		this.pageElements = page.getSize();
-		this.totalPages = page.getTotalPages();
-		this.currentPage = page.getNumber() + 1;
+		pageElements = page.getSize();
+		totalPages = page.getTotalPages();
+		currentPage = page.getNumber() + 1;
 		
 		int from, to;
-		if (this.totalPages <= this.pageElements) {
+		if (totalPages <= pageElements) {
 			from = 1;
-			to = this.totalPages;
+			to = totalPages;
 		}else {
 			if (currentPage <= pageElements/2) {
 				from = 1;
@@ -37,13 +37,13 @@ public class PageRender<T> {
 				from = totalPages - pageElements +1;
 				to = pageElements;
 			} else {
-				from = currentPage - pageElements / 2;
+				from = currentPage - pageElements/2;
 				to = pageElements;
 			}
 		}
 		
 		for(int i = 0; i < to; i++) {
-			pages.add(new PageItem(from + i, currentPage == from + 1));
+			pages.add(new PageItem(from + i, currentPage == from + i));
 		}
 	}
 
