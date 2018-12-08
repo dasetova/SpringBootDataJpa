@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.bind.support.SessionStatus;
 
-import com.dasetova.springstudy.models.dao.ICustomerDAO;
+import com.dasetova.springstudy.models.service.ICustomerService;
 import com.dasetova.springstudy.models.entity.Customer;
 
 @Controller
@@ -22,12 +22,12 @@ import com.dasetova.springstudy.models.entity.Customer;
 public class CustomerController {
 	
 	@Autowired
-	private ICustomerDAO customerDAO;
+	private ICustomerService customerService;
 
 	@RequestMapping(value="/list", method=RequestMethod.GET)
 	public String listar(Model model) {
 		model.addAttribute("title", "Customers list");
-		model.addAttribute("customers", customerDAO.findAll());
+		model.addAttribute("customers", customerService.findAll());
 		return "list";
 	}
 	
@@ -43,9 +43,9 @@ public class CustomerController {
 	public String save(@Valid Customer customer, BindingResult result, Model model) {
 		if(result.hasErrors()) {
 			model.addAttribute("title", "Customer Form");
-			return "new";
+			return "form";
 		}
-		customerDAO.save(customer);
+		customerService.save(customer);
 		return "redirect:list";
 	}
 	
@@ -53,7 +53,7 @@ public class CustomerController {
 	public String editCustomer(@PathVariable(value="id") Long id,Map<String, Object> model, SessionStatus status) {
 		Customer customer = null;
 		if (id > 0) {
-			customer = customerDAO.findOne(id);
+			customer = customerService.findOne(id);
 		}else {
 			return "redirect:/list";
 		}
@@ -66,7 +66,7 @@ public class CustomerController {
 	@RequestMapping(value="/delete/{id}")
 	public String delete(@PathVariable(value="id") Long id) {
 		if (id > 0) {
-			customerDAO.delete(id);
+			customerService.delete(id);
 		}
 		return "redirect:/list";
 	}
