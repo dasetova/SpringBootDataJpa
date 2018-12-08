@@ -26,30 +26,27 @@
 		<h1
 			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
 			th:text="${title}"></h1>
-			
-		<a th:href="@{/new}">Create Customer</a>
+		<form th:action="@{/save}" th:object="${customer}" method="post">
+			<input type="hidden" th:field="*{id}" class="form-control"/>
+			<table class="table table-bordered">
 
-		<table class="table table-striped">
-			<thead>
 				<tr>
-					<th>id</th>
-					<th>name</th>
-					<th>lastname</th>
-					<th>email</th>
-					<th>create_at</th>
+					<td style="width:200px">Name</td>
+					<td><input type="text" th:field="*{name}" class="form-control"/></td>
 				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="customer: ${customers}">
-					<td th:text="${customer.id}"></td>
-					<td th:text="${customer.name}"></td>
-					<td th:text="${customer.lastname}"></td>
-					<td th:text="${customer.email}"></td>
-					<td th:text="${customer.createAt}"></td>
+				<tr>
+					<td>Last Name</td>
+					<td><input type="text" th:field="*{lastname}" class="form-control"/></td>
 				</tr>
-			</tbody>
-		</table>
+				<tr>
+					<td>Email</td>
+					<td><input type="email" th:field="*{email}" class="form-control"/></td>
+				</tr>
+				<tr>
+					<td><input type="submit" value="Create Customer" class="btn btn-primary"/></td>
+				</tr>
+			</table>
+		</form>
 	</div>
-
 </body>
 </html>
