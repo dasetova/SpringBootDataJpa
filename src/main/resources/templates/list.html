@@ -1,59 +1,47 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-<meta charset="UTF-8" />
-<title th:text="${title}">Insert title here</title>
-<link rel="stylesheet"
-	href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" />
+<head th:replace="layout/layout :: head">
 </head>
 <body>
-	<nav class="navbar navbar-expand-md navbar-dark bg-dark">
-		<a class="navbar-brand" href="#">Spring Boot</a>
-		<button class="navbar-toggler" type="button" data-toggle="collapse"
-			aria-label="Toggle navigation">
-			<span class="navbar-toggler-icon"></span>
-		</button>
-		<div class="collapse navbar-collapse">
-			<ul class="navbar-nav mr-auto">
-				<li class="nav-item active"><a class="nav-link" href="#">Home</a></li>
-				<li class="nav-item"><a class="nav-link" href="#about"
-					th:href="@{/list}">Customer</a></li>
-			</ul>
+	<header th:replace="layout/layout :: header"></header>
+	<div class="container py-4">
+		<div class="card bg-light">
+			<div class="card-header" th:text="${title}"></div>
+			<div class="card-body">
+				<h4 class="card-title">
+					<a class="btn btn-primary btn-xs" th:href="@{/form}">Create
+						Customer</a>
+				</h4>
+			</div>
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th>id</th>
+						<th>name</th>
+						<th>lastname</th>
+						<th>email</th>
+						<th>create_at</th>
+						<th>actions</th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="customer: ${customers}">
+						<td th:text="${customer.id}"></td>
+						<td th:text="${customer.name}"></td>
+						<td th:text="${customer.lastname}"></td>
+						<td th:text="${customer.email}"></td>
+						<td th:text="${customer.createAt}"></td>
+						<td><a class="btn btn-primary btn-xs"
+							th:href="@{/form/} + ${customer.id}" th:text="'edit'"></a> <a
+							class="btn btn-danger btn-xs"
+							th:href="@{/delete/} + ${customer.id}" th:text="'delete'"
+							onclick="return confirm('Are you sure?')"></a></td>
+					</tr>
+				</tbody>
+			</table>
 		</div>
-	</nav>
-	<div class="container">
-
-		<h1
-			class="text-secondary border border-success border-top-0 border-left-0 border-right-0"
-			th:text="${title}"></h1>
-			
-		
-		<p><a class="btn btn-success btn-xs" th:href="@{/form}">Create Customer</a></p>
-
-		<table class="table table-striped">
-			<thead>
-				<tr>
-					<th>id</th>
-					<th>name</th>
-					<th>lastname</th>
-					<th>email</th>
-					<th>create_at</th>
-					<th>actions</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr th:each="customer: ${customers}">
-					<td th:text="${customer.id}"></td>
-					<td th:text="${customer.name}"></td>
-					<td th:text="${customer.lastname}"></td>
-					<td th:text="${customer.email}"></td>
-					<td th:text="${customer.createAt}"></td>
-					<td><a class="btn btn-primary btn-xs" th:href="@{/form/} + ${customer.id}" th:text="'edit'"></a>
-					<a class="btn btn-danger btn-xs" th:href="@{/delete/} + ${customer.id}" th:text="'delete'" onclick="return confirm('Are you sure?')"></a></td>
-				</tr>
-			</tbody>
-		</table>
 	</div>
+	<footer th:replace="layout/layout :: footer"></footer>
 
 </body>
 </html>
