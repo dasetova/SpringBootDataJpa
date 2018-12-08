@@ -32,6 +32,8 @@
 						<td th:text="${customer.email}"></td>
 						<td th:text="${customer.createAt}"></td>
 						<td><a class="btn btn-primary btn-xs"
+							th:href="@{/show/} + ${customer.id}" th:text="'show'"></a>
+							<a class="btn btn-primary btn-xs"
 							th:href="@{/form/} + ${customer.id}" th:text="'edit'"></a> <a
 							class="btn btn-danger btn-xs"
 							th:href="@{/delete/} + ${customer.id}" th:text="'delete'"
