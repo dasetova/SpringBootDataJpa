@@ -30,4 +30,8 @@ public interface ICustomerService {
 	public Bill findBillById(Long id);
 	
 	public void deleteBill(Long id);
+	
+	public Bill fetchBillByIdWithCustomerWithBillItemWithProduct(Long id);
+	
+	public Customer fetchCustomerByIdWithBills(Long id);
 }

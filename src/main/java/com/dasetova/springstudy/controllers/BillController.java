@@ -35,7 +35,7 @@ public class BillController {
 	
 	@GetMapping("/show/{id}")
 	public String show(@PathVariable(value="id") Long id, Model model, RedirectAttributes flash) {
-		Bill bill = customerService.findBillById(id);
+		Bill bill = customerService.fetchBillByIdWithCustomerWithBillItemWithProduct(id); //customerService.findBillById(id);
 		if(bill == null) {
 			flash.addFlashAttribute("error", "The bill doesnt exists in database");
 			return "redirect:/list";

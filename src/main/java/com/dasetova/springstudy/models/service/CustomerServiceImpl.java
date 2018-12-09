@@ -94,4 +94,16 @@ public class CustomerServiceImpl implements ICustomerService {
 		billDAO.delete(id);
 	}
 
+	@Override
+	public Bill fetchBillByIdWithCustomerWithBillItemWithProduct(Long id) {
+		// TODO Auto-generated method stub
+		return billDAO.fetchByIdWithCustomerWithBillItemWithProduct(id);
+	}
+
+	@Override
+	public Customer fetchCustomerByIdWithBills(Long id) {
+		// TODO Auto-generated method stub
+		return customerDAO.fetchByIdWithBills(id);
+	}
+
 }
