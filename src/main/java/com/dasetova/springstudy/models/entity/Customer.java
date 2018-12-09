@@ -1,13 +1,18 @@
 package com.dasetova.springstudy.models.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 //import javax.persistence.PrePersist;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
@@ -50,6 +55,14 @@ public class Customer implements Serializable{
 	
 	private String photo;
 	
+	//El mappedBy hace que se cree la llave foránea customer_id
+	@OneToMany(mappedBy="customer" ,fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	private List<Bill> bills;
+	
+	public Customer() {
+		this.bills = new ArrayList<Bill>();
+	}
+	
 //	@PrePersist
 //	public void prePersist() {
 //		createAt = new Date();
@@ -91,5 +104,24 @@ public class Customer implements Serializable{
 	public void setPhoto(String photo) {
 		this.photo = photo;
 	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+	public List<Bill> getBills() {
+		return bills;
+	}
+	public void setBills(List<Bill> bills) {
+		this.bills = bills;
+	}
+	
+	public void addBill(Bill bill) {
+		this.bills.add(bill);
+	}
+
+	@Override
+	public String toString() {
+		return name + " " + lastname;
+	}
+	
 	
 }
