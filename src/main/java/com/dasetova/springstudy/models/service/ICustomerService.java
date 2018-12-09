@@ -24,4 +24,6 @@ public interface ICustomerService {
 	public List<Product> findByName(String term);
 	
 	public void saveBill(Bill bill);
+	
+	public Product findProductById(Long id);
 }

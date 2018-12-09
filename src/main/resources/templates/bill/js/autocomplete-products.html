@@ -39,10 +39,11 @@
 					return false;
 				}
 			});
-			
-		}
-				
-		);
+			$("form").submit(function(){
+				$("#billItemTemplate").remove();
+				return;
+			});	
+		});
 		
 		var itemsHelper = {
 				calculateValue: function(id, price, quantity){

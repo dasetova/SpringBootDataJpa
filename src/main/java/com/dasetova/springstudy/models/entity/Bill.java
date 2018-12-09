@@ -20,6 +20,8 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
+import org.hibernate.validator.constraints.NotEmpty;
+
 @Entity
 @Table(name="bills")
 public class Bill implements Serializable {
@@ -29,7 +31,10 @@ public class Bill implements Serializable {
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private Long id;
 	
+	@NotEmpty
 	private String description;
+	
+	
 	private String observation;
 	
 	@Temporal(TemporalType.DATE)
@@ -104,4 +109,6 @@ public class Bill implements Serializable {
 		}
 		return total;
 	}
+	
+	
 }

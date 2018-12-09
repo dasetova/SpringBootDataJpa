@@ -74,4 +74,10 @@ public class CustomerServiceImpl implements ICustomerService {
 		billDAO.save(bill);
 	}
 
+	@Override
+	public Product findProductById(Long id) {
+		// TODO Auto-generated method stub
+		return productDAO.findOne(id);
+	}
+
 }
