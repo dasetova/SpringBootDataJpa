@@ -3,13 +3,25 @@ package com.dasetova.springstudy.controllers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -35,6 +47,8 @@ import com.dasetova.springstudy.models.entity.Customer;
 @Controller
 @SessionAttributes("customer") // Good practice to unused the hidden id
 public class CustomerController {
+	
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private ICustomerService customerService;
@@ -42,6 +56,7 @@ public class CustomerController {
 	@Autowired
 	private IUploadFileService uploadFileService;
 
+	@Secured("ROLE_USER")
 	@GetMapping(value = "/uploads/{filename:.+}")
 	public ResponseEntity<Resource> showPhoto(@PathVariable String filename) {
 		Resource resource = null;
@@ -56,8 +71,41 @@ public class CustomerController {
 				.body(resource);
 	}
 
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	@RequestMapping(value = {"/list", "/"}, method = RequestMethod.GET)
+	public String list(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
+			Authentication authentication,
+			HttpServletRequest request) {
+		if (authentication != null)
+		{
+			this.log.info("Username visiting /list: " + authentication.getName());
+		}
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth!= null)
+		{
+			this.log.info("Another way to get Username visiting /list: " + auth.getName());
+		}
+		
+		if(hasRole("ROLE_ADMIN")) {
+			this.log.info("Role validation /list - Granted ");
+		}else {
+			this.log.info("Role validation /list - Not Granted ");
+		}
+		
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+		
+		if(securityContext.isUserInRole("ADMIN")) {
+			this.log.info("Role validation /list - Granted - With SecurityContext");
+		}else{
+			this.log.info("Role validation /list - Not Granted - With SecurityContext");
+		}
+		
+		if(request.isUserInRole("ROLE_ADMIN")) {
+			this.log.info("Role validation /list - Granted - With HttpServer");
+		}else{
+			this.log.info("Role validation /list - Not Granted - With HttpServer");
+		}
+		
 		Pageable pageRequest = PageRequest.of(page, 5);
 
 		Page<Customer> customers = customerService.findAll(pageRequest);
@@ -68,6 +116,7 @@ public class CustomerController {
 		return "list";
 	}
 
+	@Secured("ROLE_USER")
 	@GetMapping(value = "show/{id}")
 	public String showCustomer(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		Customer customer = this.customerService.fetchCustomerByIdWithBills(id);//this.customerService.findOne(id);
@@ -80,6 +129,7 @@ public class CustomerController {
 		return "show";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/form")
 	public String newCustomer(Map<String, Object> model) {
 		Customer customer = new Customer();
@@ -88,6 +138,7 @@ public class CustomerController {
 		return "form";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(@Valid Customer customer, BindingResult result, Model model,
 			@RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus status) {
@@ -119,6 +170,7 @@ public class CustomerController {
 		return "redirect:list";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/form/{id}")
 	public String editCustomer(@PathVariable(value = "id") Long id, Map<String, Object> model,
 			RedirectAttributes flash) {
@@ -139,6 +191,7 @@ public class CustomerController {
 		return "form";
 	}
 
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/delete/{id}")
 	public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
@@ -151,5 +204,26 @@ public class CustomerController {
 			}
 		}
 		return "redirect:/list";
+	}
+	
+	private boolean hasRole(String role) {
+		SecurityContext context = SecurityContextHolder.getContext();
+		if(context == null ) {
+			return false;
+		}
+		
+		Authentication auth = context.getAuthentication();
+		if(auth == null ) {
+			return false;
+		}
+		
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		authorities.contains(new SimpleGrantedAuthority(role));
+//		for(GrantedAuthority authority : authorities) {
+//			if(role.equals(authority.getAuthority())) {
+//				return true;
+//			}
+//		}
+		return false;
 	}
 }
