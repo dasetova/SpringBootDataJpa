@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org"
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head th:replace="layout/layout :: head">
 </head>
 <body>
@@ -9,7 +10,7 @@
 			<div class="card-header" th:text="${title}"></div>
 			<div class="card-body">
 				<h4 class="card-title">
-					<a class="btn btn-primary btn-xs"
+					<a  sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs"
 							th:href="@{/bill/form/} + ${customer.id}" th:text="'Create Bill'"></a>
 				</h4>
 			
@@ -33,7 +34,7 @@
 							<th>description</th>
 							<th>creation date</th>
 							<th>total</th>
-							<th>actions</th>
+							<th sec:authorize="hasRole('ROLE_ADMIN')">actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -43,8 +44,8 @@
 							<td th:text="${bill.createAt}"></td>
 							<td th:text="${bill.total}"></td>
 							<td>
-								<a class="btn btn-primary btn-xs" th:href="@{'/bill/show/' + ${bill.id}}" th:text="Show"></a>
-								<a class="btn btn-danger btn-xs" th:href="@{'/bill/delete/' + ${bill.id}}" th:text="Delete"
+								<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-primary btn-xs" th:href="@{'/bill/show/' + ${bill.id}}" th:text="Show"></a>
+								<a sec:authorize="hasRole('ROLE_ADMIN')" class="btn btn-danger btn-xs" th:href="@{'/bill/delete/' + ${bill.id}}" th:text="Delete"
 								onclick="return confirm('Are you sure?');"></a>
 							</td>
 						</tr>

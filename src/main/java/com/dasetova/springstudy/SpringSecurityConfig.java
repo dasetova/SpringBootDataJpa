@@ -8,10 +8,13 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.User.UserBuilder;
 
+import com.dasetova.springstudy.auth.handler.LoginSuccessHandler;
+
 @Configuration
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
-	
+	@Autowired
+	private LoginSuccessHandler successHandler;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -20,7 +23,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 		.antMatchers("/show/**", "/uploads/**").hasAnyRole("USER")
 		.antMatchers("/form/**", "/delete/**", "/bill/**").hasAnyRole("ADMIN")
 		.anyRequest().authenticated()
-		.and().formLogin().loginPage("/login").permitAll() //Creates the login and manages the unauthorized
+		.and().formLogin().successHandler(successHandler).loginPage("/login").permitAll() //Creates the login and manages the unauthorized
 		.and().logout().permitAll().and().exceptionHandling().accessDeniedPage("/error_403");
 	}
 
