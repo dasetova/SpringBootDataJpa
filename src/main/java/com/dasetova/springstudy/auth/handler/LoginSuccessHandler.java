@@ -21,7 +21,7 @@ public class LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler{
 		// TODO Auto-generated method stub
 		SessionFlashMapManager flashMapManager = new SessionFlashMapManager();
 		FlashMap flashMap = new FlashMap();
-		flashMap.put("success", "Login successfull");
+		flashMap.put("success", "Hola " + authentication.getName()+ ",Login successfull");
 		flashMapManager.saveOutputFlashMap(flashMap, request, response);
 		super.onAuthenticationSuccess(request, response, authentication);
 	}

@@ -3,13 +3,21 @@ package com.dasetova.springstudy.controllers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.util.Collection;
 import java.util.Map;
 
 import javax.validation.Valid;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
@@ -35,6 +43,8 @@ import com.dasetova.springstudy.models.entity.Customer;
 @Controller
 @SessionAttributes("customer") // Good practice to unused the hidden id
 public class CustomerController {
+	
+	protected final Logger log = LoggerFactory.getLogger(getClass());
 
 	@Autowired
 	private ICustomerService customerService;
@@ -57,7 +67,25 @@ public class CustomerController {
 	}
 
 	@RequestMapping(value = {"/list", "/"}, method = RequestMethod.GET)
-	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
+	public String list(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
+			Authentication authentication) {
+		if (authentication != null)
+		{
+			this.log.info("Username visiting /list: " + authentication.getName());
+		}
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		if (auth!= null)
+		{
+			this.log.info("Another way to get Username visiting /list: " + auth.getName());
+		}
+		
+		if(hasRole("ROLE_ADMIN")) {
+			this.log.info("Role validation /list - Granted ");
+		}else {
+			this.log.info("Role validation /list - Not Granted ");
+		}
+		
 		Pageable pageRequest = PageRequest.of(page, 5);
 
 		Page<Customer> customers = customerService.findAll(pageRequest);
@@ -151,5 +179,26 @@ public class CustomerController {
 			}
 		}
 		return "redirect:/list";
+	}
+	
+	private boolean hasRole(String role) {
+		SecurityContext context = SecurityContextHolder.getContext();
+		if(context == null ) {
+			return false;
+		}
+		
+		Authentication auth = context.getAuthentication();
+		if(auth == null ) {
+			return false;
+		}
+		
+		Collection<? extends GrantedAuthority> authorities = auth.getAuthorities();
+		authorities.contains(new SimpleGrantedAuthority(role));
+//		for(GrantedAuthority authority : authorities) {
+//			if(role.equals(authority.getAuthority())) {
+//				return true;
+//			}
+//		}
+		return false;
 	}
 }
