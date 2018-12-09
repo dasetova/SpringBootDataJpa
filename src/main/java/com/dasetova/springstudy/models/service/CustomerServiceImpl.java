@@ -80,4 +80,18 @@ public class CustomerServiceImpl implements ICustomerService {
 		return productDAO.findOne(id);
 	}
 
+	@Override
+	@Transactional(readOnly=true)
+	public Bill findBillById(Long id) {
+		// TODO Auto-generated method stub
+		return billDAO.findOne(id);
+	}
+
+	@Override
+	@Transactional
+	public void deleteBill(Long id) {
+		// TODO Auto-generated method stub
+		billDAO.delete(id);
+	}
+
 }

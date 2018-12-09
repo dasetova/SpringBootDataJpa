@@ -33,6 +33,7 @@
 							<th>description</th>
 							<th>creation date</th>
 							<th>total</th>
+							<th>actions</th>
 						</tr>
 					</thead>
 					<tbody>
@@ -41,6 +42,11 @@
 							<td th:text="${bill.description}"></td>
 							<td th:text="${bill.createAt}"></td>
 							<td th:text="${bill.total}"></td>
+							<td>
+								<a class="btn btn-primary btn-xs" th:href="@{'/bill/show/' + ${bill.id}}" th:text="Show"></a>
+								<a class="btn btn-danger btn-xs" th:href="@{'/bill/delete/' + ${bill.id}}" th:text="Delete"
+								onclick="return confirm('Are you sure?');"></a>
+							</td>
 						</tr>
 					</tbody>
 

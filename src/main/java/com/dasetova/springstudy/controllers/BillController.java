@@ -33,6 +33,18 @@ public class BillController {
 	@Autowired
 	private ICustomerService customerService;
 	
+	@GetMapping("/show/{id}")
+	public String show(@PathVariable(value="id") Long id, Model model, RedirectAttributes flash) {
+		Bill bill = customerService.findBillById(id);
+		if(bill == null) {
+			flash.addFlashAttribute("error", "The bill doesnt exists in database");
+			return "redirect:/list";
+		}
+		model.addAttribute("bill", bill);
+		model.addAttribute("title", "Bill: " .concat(bill.getDescription()));
+		return "bill/show";
+	}
+	
 	@GetMapping("/form/{customerId}")
 	public String create(@PathVariable(value="customerId") Long customerId, Map<String, Object> model, RedirectAttributes flash) {
 		Customer customer = customerService.findOne(customerId);
@@ -84,5 +96,17 @@ public class BillController {
 		status.setComplete();
 		flash.addFlashAttribute("success", "Bill created!");
 		return "redirect:/show/" + bill.getCustomer().getId();
+	}
+	
+	@GetMapping("delete/{id}")
+	public String delete(@PathVariable(value="id") Long id, RedirectAttributes flash) {
+		Bill bill = this.customerService.findBillById(id);
+		if (bill != null) {
+			this.customerService.deleteBill(id);
+			flash.addFlashAttribute("success", "Bill deleted");
+			return "redirect:/show/" + bill.getCustomer().getId();
+		}
+		flash.addFlashAttribute("error", "Bill does not exists");
+		return "redirect:/list";
 	}
 }
