@@ -3,6 +3,7 @@ package com.dasetova.springstudy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
@@ -11,6 +12,7 @@ import org.springframework.security.core.userdetails.User.UserBuilder;
 import com.dasetova.springstudy.auth.handler.LoginSuccessHandler;
 
 @Configuration
+@EnableGlobalMethodSecurity(securedEnabled=true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
@@ -20,8 +22,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	protected void configure(HttpSecurity http) throws Exception {
 		// TODO Auto-generated method stub
 		http.authorizeRequests().antMatchers("/", "/css/**", "/js/**", "/images/**", "/list").permitAll()
-		.antMatchers("/show/**", "/uploads/**").hasAnyRole("USER")
-		.antMatchers("/form/**", "/delete/**", "/bill/**").hasAnyRole("ADMIN")
+//		.antMatchers("/show/**", "/uploads/**").hasAnyRole("USER")
+//		.antMatchers("/form/**", "/delete/**", "/bill/**").hasAnyRole("ADMIN")
 		.anyRequest().authenticated()
 		.and().formLogin().successHandler(successHandler).loginPage("/login").permitAll() //Creates the login and manages the unauthorized
 		.and().logout().permitAll().and().exceptionHandling().accessDeniedPage("/error_403");

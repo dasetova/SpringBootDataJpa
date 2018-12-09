@@ -3,6 +3,7 @@ package com.dasetova.springstudy.controllers;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -54,6 +55,7 @@ public class CustomerController {
 	@Autowired
 	private IUploadFileService uploadFileService;
 
+	@Secured("ROLE_USER")
 	@GetMapping(value = "/uploads/{filename:.+}")
 	public ResponseEntity<Resource> showPhoto(@PathVariable String filename) {
 		Resource resource = null;
@@ -113,6 +115,7 @@ public class CustomerController {
 		return "list";
 	}
 
+	@Secured("ROLE_USER")
 	@GetMapping(value = "show/{id}")
 	public String showCustomer(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
 		Customer customer = this.customerService.fetchCustomerByIdWithBills(id);//this.customerService.findOne(id);
@@ -125,6 +128,7 @@ public class CustomerController {
 		return "show";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/form")
 	public String newCustomer(Map<String, Object> model) {
 		Customer customer = new Customer();
@@ -133,6 +137,7 @@ public class CustomerController {
 		return "form";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/save", method = RequestMethod.POST)
 	public String save(@Valid Customer customer, BindingResult result, Model model,
 			@RequestParam("file") MultipartFile photo, RedirectAttributes flash, SessionStatus status) {
@@ -164,6 +169,7 @@ public class CustomerController {
 		return "redirect:list";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/form/{id}")
 	public String editCustomer(@PathVariable(value = "id") Long id, Map<String, Object> model,
 			RedirectAttributes flash) {
@@ -184,6 +190,7 @@ public class CustomerController {
 		return "form";
 	}
 
+	@Secured("ROLE_ADMIN")
 	@RequestMapping(value = "/delete/{id}")
 	public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
