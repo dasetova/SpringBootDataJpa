@@ -45,14 +45,14 @@ public class CustomerServiceImpl implements ICustomerService {
 	@Transactional(readOnly=true)
 	public Customer findOne(Long id) {
 		// TODO Auto-generated method stub
-		return customerDAO.findOne(id);
+		return customerDAO.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional
 	public void delete(Long id) {
 		// TODO Auto-generated method stub
-		customerDAO.delete(id);
+		customerDAO.deleteById(id);
 	}
 
 	@Override
@@ -77,21 +77,33 @@ public class CustomerServiceImpl implements ICustomerService {
 	@Override
 	public Product findProductById(Long id) {
 		// TODO Auto-generated method stub
-		return productDAO.findOne(id);
+		return productDAO.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional(readOnly=true)
 	public Bill findBillById(Long id) {
 		// TODO Auto-generated method stub
-		return billDAO.findOne(id);
+		return billDAO.findById(id).orElse(null);
 	}
 
 	@Override
 	@Transactional
 	public void deleteBill(Long id) {
 		// TODO Auto-generated method stub
-		billDAO.delete(id);
+		billDAO.deleteById(id);
+	}
+
+	@Override
+	public Bill fetchBillByIdWithCustomerWithBillItemWithProduct(Long id) {
+		// TODO Auto-generated method stub
+		return billDAO.fetchByIdWithCustomerWithBillItemWithProduct(id);
+	}
+
+	@Override
+	public Customer fetchCustomerByIdWithBills(Long id) {
+		// TODO Auto-generated method stub
+		return customerDAO.fetchByIdWithBills(id);
 	}
 
 }

@@ -58,7 +58,7 @@ public class CustomerController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-		Pageable pageRequest = new PageRequest(page, 5);
+		Pageable pageRequest = PageRequest.of(page, 5);
 
 		Page<Customer> customers = customerService.findAll(pageRequest);
 		PageRender<Customer> pageRender = new PageRender<>("/list", customers);
@@ -70,7 +70,7 @@ public class CustomerController {
 
 	@GetMapping(value = "show/{id}")
 	public String showCustomer(@PathVariable("id") Long id, Map<String, Object> model, RedirectAttributes flash) {
-		Customer customer = this.customerService.findOne(id);
+		Customer customer = this.customerService.fetchCustomerByIdWithBills(id);//this.customerService.findOne(id);
 		if (customer == null) {
 			flash.addFlashAttribute("error", "Customer doesnt exists");
 			return "redirect:/list";
