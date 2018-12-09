@@ -12,7 +12,7 @@ import org.springframework.security.core.userdetails.User.UserBuilder;
 import com.dasetova.springstudy.auth.handler.LoginSuccessHandler;
 
 @Configuration
-@EnableGlobalMethodSecurity(securedEnabled=true)
+@EnableGlobalMethodSecurity(securedEnabled=true, prePostEnabled=true)
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired

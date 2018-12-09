@@ -4,6 +4,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -190,7 +191,7 @@ public class CustomerController {
 		return "form";
 	}
 
-	@Secured("ROLE_ADMIN")
+	@PreAuthorize("hasRole('ROLE_ADMIN')")
 	@RequestMapping(value = "/delete/{id}")
 	public String delete(@PathVariable(value = "id") Long id, RedirectAttributes flash) {
 		if (id > 0) {
