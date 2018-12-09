@@ -58,7 +58,7 @@ public class CustomerController {
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public String listar(@RequestParam(name = "page", defaultValue = "0") int page, Model model) {
-		Pageable pageRequest = new PageRequest(page, 5);
+		Pageable pageRequest = PageRequest.of(page, 5);
 
 		Page<Customer> customers = customerService.findAll(pageRequest);
 		PageRender<Customer> pageRender = new PageRender<>("/list", customers);
