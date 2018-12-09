@@ -8,12 +8,14 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestWrapper;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.slf4j.Logger;
@@ -68,7 +70,8 @@ public class CustomerController {
 
 	@RequestMapping(value = {"/list", "/"}, method = RequestMethod.GET)
 	public String list(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
-			Authentication authentication) {
+			Authentication authentication,
+			HttpServletRequest request) {
 		if (authentication != null)
 		{
 			this.log.info("Username visiting /list: " + authentication.getName());
@@ -84,6 +87,20 @@ public class CustomerController {
 			this.log.info("Role validation /list - Granted ");
 		}else {
 			this.log.info("Role validation /list - Not Granted ");
+		}
+		
+		SecurityContextHolderAwareRequestWrapper securityContext = new SecurityContextHolderAwareRequestWrapper(request, "ROLE_");
+		
+		if(securityContext.isUserInRole("ADMIN")) {
+			this.log.info("Role validation /list - Granted - With SecurityContext");
+		}else{
+			this.log.info("Role validation /list - Not Granted - With SecurityContext");
+		}
+		
+		if(request.isUserInRole("ROLE_ADMIN")) {
+			this.log.info("Role validation /list - Granted - With HttpServer");
+		}else{
+			this.log.info("Role validation /list - Not Granted - With HttpServer");
 		}
 		
 		Pageable pageRequest = PageRequest.of(page, 5);
