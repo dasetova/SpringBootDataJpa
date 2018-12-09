@@ -42,3 +42,10 @@ INSERT INTO bill_items (quantity, bill_id, product_id) VALUES (1, 1, 7);
 
 INSERT INTO bills (description, observation, customer_id, create_at) VALUES ('Example bill 2', 'some important note', 1, NOW());
 INSERT INTO bill_items (quantity, bill_id, product_id) VALUES (1, 2, 6);
+
+INSERT INTO users (username, password, enabled) VALUES ('dasetova', '$2a$10$EaGWMEj5CIOmDPPj66kzJODskyq/WWzqz2ZaZ3DNu9S5sBN46QzKi', 1);
+INSERT INTO users (username, password, enabled) VALUES ('admin', '$2a$10$cDc4JJ/Oapr37pbQTac6XOPSx5SO4NsCF8m3P9zu14TdHmVItxpsi', 1);
+
+INSERT INTO authorities (user_id, authority) VALUES (1, 'ROLE_USER');
+INSERT INTO authorities (user_id, authority) VALUES (2, 'ROLE_USER');
+INSERT INTO authorities (user_id, authority) VALUES (2, 'ROLE_ADMIN');
