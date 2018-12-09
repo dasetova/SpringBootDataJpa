@@ -15,6 +15,7 @@ import org.springframework.security.web.servletapi.SecurityContextHolderAwareReq
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.Collection;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +24,7 @@ import javax.validation.Valid;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -55,6 +57,9 @@ public class CustomerController {
 
 	@Autowired
 	private IUploadFileService uploadFileService;
+	
+	@Autowired
+	private MessageSource messageSource;
 
 	@Secured("ROLE_USER")
 	@GetMapping(value = "/uploads/{filename:.+}")
@@ -74,7 +79,8 @@ public class CustomerController {
 	@RequestMapping(value = {"/list", "/"}, method = RequestMethod.GET)
 	public String list(@RequestParam(name = "page", defaultValue = "0") int page, Model model,
 			Authentication authentication,
-			HttpServletRequest request) {
+			HttpServletRequest request,
+			Locale locale) {
 		if (authentication != null)
 		{
 			this.log.info("Username visiting /list: " + authentication.getName());
@@ -110,7 +116,7 @@ public class CustomerController {
 
 		Page<Customer> customers = customerService.findAll(pageRequest);
 		PageRender<Customer> pageRender = new PageRender<>("/list", customers);
-		model.addAttribute("title", "Customers list");
+		model.addAttribute("title", messageSource.getMessage("text.customer.list.title", null, locale));
 		model.addAttribute("customers", customers);
 		model.addAttribute("page", pageRender);
 		return "list";

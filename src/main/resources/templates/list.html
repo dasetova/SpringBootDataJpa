@@ -19,10 +19,10 @@
 				<thead>
 					<tr>
 						<th>id</th>
-						<th>name</th>
-						<th>lastname</th>
-						<th>email</th>
-						<th>create_at</th>
+						<th th:text="#{text.customer.name}">name</th>
+						<th th:text="#{text.customer.lastname}">lastname</th>
+						<th th:text="#{text.customer.email}">email</th>
+						<th th:text="#{text.customer.createAt}">create_at</th>
 						<th sec:authorize="hasRole('ROLE_USER')">actions</th>
 					</tr>
 				</thead>
