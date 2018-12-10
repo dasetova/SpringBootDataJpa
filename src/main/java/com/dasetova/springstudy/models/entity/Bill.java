@@ -21,6 +21,9 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import javax.validation.constraints.NotEmpty;
+import javax.xml.bind.annotation.XmlTransient;
+
+import com.fasterxml.jackson.annotation.JsonBackReference;
 
 @Entity
 @Table(name="bills")
@@ -48,6 +51,7 @@ public class Bill implements Serializable {
 	
 	// fetch -> como cargar la relación? EAGER de una LAZY -> Solo cuando se solicite
 	@ManyToOne(fetch=FetchType.LAZY)
+	@JsonBackReference
 	private Customer customer;
 	
 	@OneToMany(fetch=FetchType.LAZY, cascade=CascadeType.ALL)
@@ -70,6 +74,8 @@ public class Bill implements Serializable {
 	public Date getCreateAt() {
 		return createAt;
 	}
+	
+	@XmlTransient
 	public Customer getCustomer() {
 		return customer;
 	}
