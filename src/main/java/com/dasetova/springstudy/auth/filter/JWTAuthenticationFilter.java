@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.dasetova.springstudy.auth.service.JWTService;
+import com.dasetova.springstudy.auth.service.JWTServiceImpl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilter{
@@ -74,7 +75,7 @@ public class JWTAuthenticationFilter extends UsernamePasswordAuthenticationFilte
 		// TODO Auto-generated method stub
 		String token = this.jwtService.create(authResult);
 		
-		response.addHeader("Authorization", "Bearer " + token);
+		response.addHeader(JWTServiceImpl.HEADER_STRING, JWTServiceImpl.TOKEN_PREFIX + token);
 		Map<String, Object> body = new HashMap<String, Object>();
 		body.put("token", token);
 		body.put("user", (User) authResult.getPrincipal());

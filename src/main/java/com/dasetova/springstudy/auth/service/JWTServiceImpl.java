@@ -10,6 +10,7 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Component;
+import org.springframework.util.Base64Utils;
 
 import com.dasetova.springstudy.auth.SimpleGrantedAuthorityMixin;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -22,6 +23,11 @@ import io.jsonwebtoken.SignatureAlgorithm;
 
 @Component
 public class JWTServiceImpl implements JWTService {
+	
+	public static final String SECRET=Base64Utils.encodeToString("A.Very.Secret.P@ssw0rd".getBytes());
+	public static final long EXPIRATION_DATE = 3600000L;
+	public static final String TOKEN_PREFIX = "Bearer ";
+	public static final String HEADER_STRING = "Authorization";
 
 	@Override
 	public String create(Authentication auth) throws JsonProcessingException {
@@ -34,10 +40,10 @@ public class JWTServiceImpl implements JWTService {
 		claims.put("authorities", new ObjectMapper().writeValueAsString(roles));
 
 		String token = Jwts.builder().setClaims(claims).setSubject(username)// authResult.getName() //Usuario
-				.signWith(SignatureAlgorithm.HS512, "A.Very.Secret.P@ssw0rd".getBytes()).setIssuedAt(new Date()) // Fecha
+				.signWith(SignatureAlgorithm.HS512, SECRET.getBytes()).setIssuedAt(new Date()) // Fecha
 																													// de
 																													// creacion
-				.setExpiration(new Date(System.currentTimeMillis() + 3600000L)) // Fecha de expiracion
+				.setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_DATE)) // Fecha de expiracion
 				.compact();
 		return token;
 	}
@@ -56,7 +62,7 @@ public class JWTServiceImpl implements JWTService {
 	@Override
 	public Claims getClaims(String token) {
 		// TODO Auto-generated method stub
-		return Jwts.parser().setSigningKey("A.Very.Secret.P@ssw0rd".getBytes())
+		return Jwts.parser().setSigningKey(SECRET.getBytes())
 				.parseClaimsJws(resolve(token)).getBody();
 	}
 
@@ -76,8 +82,8 @@ public class JWTServiceImpl implements JWTService {
 
 	@Override
 	public String resolve(String token) {
-		if(token!=null && token.startsWith("Bearer")) {
-			return token.replace("Bearer ", "");
+		if(token!=null && token.startsWith(TOKEN_PREFIX)) {
+			return token.replace(TOKEN_PREFIX, "");
 		}
 		return null;
 	}
