@@ -11,7 +11,8 @@
 				<h4 class="card-title">
 					<a th:href="@{'/show/' + ${bill.customer.id}}"
 					class="btn btn-light btn-xs">&laquo; go back</a>
-
+					<a class="btn btn-danger btn-xs float-right" th:href="@{'/bill/show/' + ${bill.id}(format=pdf)}"
+					>Export PDF</a>
 				</h4>
 
 				<ul class="list-group my-2">
