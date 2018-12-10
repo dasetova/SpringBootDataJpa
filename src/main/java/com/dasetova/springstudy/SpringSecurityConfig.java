@@ -11,6 +11,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.dasetova.springstudy.auth.filter.JWTAuthenticationFilter;
 import com.dasetova.springstudy.auth.filter.JWTAuthorizationFilter;
+import com.dasetova.springstudy.auth.service.JWTService;
 //import com.dasetova.springstudy.auth.handler.LoginSuccessHandler;
 import com.dasetova.springstudy.models.service.JpaUserDetailsService;
 
@@ -26,6 +27,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 	
 	@Autowired
 	private JpaUserDetailsService userDetailsService;
+	
+	@Autowired
+	private JWTService jwtService;
 
 	@Override
 	protected void configure(HttpSecurity http) throws Exception {
@@ -37,8 +41,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 //		.and().formLogin().successHandler(successHandler).loginPage("/login").permitAll() //Creates the login and manages the unauthorized
 //		.and().logout().permitAll().and().exceptionHandling().accessDeniedPage("/error_403")
 		.and()
-		.addFilter(new JWTAuthenticationFilter(authenticationManager()))
-		.addFilter(new JWTAuthorizationFilter(authenticationManager()))
+		.addFilter(new JWTAuthenticationFilter(authenticationManager(), this.jwtService))
+		.addFilter(new JWTAuthorizationFilter(authenticationManager(), this.jwtService))
 		.csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
