@@ -23,6 +23,10 @@ import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+//import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 @Entity
 @Table(name="customers")
 public class Customer implements Serializable{
@@ -51,12 +55,14 @@ public class Customer implements Serializable{
 	@Column(name="create_at")
 	@Temporal(TemporalType.DATE)
 	@DateTimeFormat(pattern="yyyy-MM-dd")
+	@JsonFormat(pattern="yyyy-MM-dd")
 	private Date createAt;
 	
 	private String photo;
 	
 	//El mappedBy hace que se cree la llave foránea customer_id
 	@OneToMany(mappedBy="customer" ,fetch=FetchType.LAZY, cascade=CascadeType.ALL)
+	@JsonManagedReference
 	private List<Bill> bills;
 	
 	public Customer() {
