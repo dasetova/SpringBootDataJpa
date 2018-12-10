@@ -10,6 +10,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import com.dasetova.springstudy.auth.filter.JWTAuthenticationFilter;
+import com.dasetova.springstudy.auth.filter.JWTAuthorizationFilter;
 //import com.dasetova.springstudy.auth.handler.LoginSuccessHandler;
 import com.dasetova.springstudy.models.service.JpaUserDetailsService;
 
@@ -37,6 +38,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter{
 //		.and().logout().permitAll().and().exceptionHandling().accessDeniedPage("/error_403")
 		.and()
 		.addFilter(new JWTAuthenticationFilter(authenticationManager()))
+		.addFilter(new JWTAuthorizationFilter(authenticationManager()))
 		.csrf().disable()
 		.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 	}
