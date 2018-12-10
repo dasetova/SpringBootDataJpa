@@ -25,7 +25,7 @@ public class CustomerCsvView extends AbstractView{
 		response.setContentType(getContentType());
 		
 		@SuppressWarnings("unchecked")
-		Page<Customer> customers = (Page<Customer>) model.get("customer");
+		Page<Customer> customers = (Page<Customer>) model.get("customers");
 		ICsvBeanWriter beanWriter = new CsvBeanWriter(response.getWriter(), CsvPreference.STANDARD_PREFERENCE);
 		
 		String [] header = {"id", "name", "lastname", "email", "createAt"};
